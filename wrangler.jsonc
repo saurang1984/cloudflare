@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cf-ai-atlas-chat",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-25",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CHAT_SESSION",
+        "class_name": "ChatSession"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ChatSession"]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "atlas-memory-workflow",
+      "binding": "MEMORY_WORKFLOW",
+      "class_name": "MemoryWorkflow"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

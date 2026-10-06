@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atlas - AI chat with memory on Cloudflare</title>
+    <meta name="description" content="Chat assistant powered by Llama 3.3 on Workers AI, Durable Objects and Workflows." />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <div>
+          <h1>Atlas</h1>
+          <p class="subtitle">Llama 3.3 &middot; Workers AI &middot; Durable Objects &middot; Workflows</p>
+        </div>
+      </div>
+      <div class="actions">
+        <label class="toggle" id="speak-toggle-label">
+          <input type="checkbox" id="speak-toggle" />
+          <span>Speak replies</span>
+        </label>
+        <button type="button" id="reset-btn" class="secondary">Reset session</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="chat" aria-label="Chat">
+        <div id="messages" class="messages" aria-live="polite">
+          <div id="empty-state" class="empty">
+            <h2>Hi, I'm Atlas.</h2>
+            <p>Ask me anything. Type below or tap the microphone to talk.</p>
+            <p class="muted">I remember what you tell me: every few messages a Cloudflare Workflow condenses our conversation into long-term memory.</p>
+            <div class="suggestions">
+              <button type="button" class="suggestion">Hi! I'm a backend developer learning Rust. Where should I start?</button>
+              <button type="button" class="suggestion">Explain Durable Objects like I'm five.</button>
+              <button type="button" class="suggestion">Plan a 3-day vegetarian trip to Lisbon.</button>
+            </div>
+          </div>
+        </div>
+
+        <form id="composer" class="composer" autocomplete="off">
+          <textarea
+            id="input"
+            rows="1"
+            maxlength="4000"
+            placeholder="Message Atlas... (Enter to send, Shift+Enter for a new line)"
+            aria-label="Message"
+          ></textarea>
+          <button type="button" id="mic-btn" class="icon-btn" title="Voice input" aria-label="Voice input">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"
+              />
+            </svg>
+          </button>
+          <button type="submit" id="send-btn" class="primary">Send</button>
+        </form>
+      </section>
+
+      <aside class="memory" aria-label="Long-term memory">
+        <div class="memory-header">
+          <h2>Memory</h2>
+          <span id="memory-badge" class="badge" hidden>Updating</span>
+        </div>
+        <p id="memory-status" class="muted small"></p>
+
+        <h3>Conversation summary</h3>
+        <p id="memory-summary" class="summary muted"></p>
+
+        <h3>What Atlas knows about you</h3>
+        <ul id="memory-facts" class="facts"></ul>
+
+        <button type="button" id="refresh-memory-btn" class="secondary full">Update memory now</button>
+        <p class="muted small">
+          Memory is built by a durable Cloudflare Workflow (summarize &rarr; extract facts &rarr; save) and stored in
+          this session's Durable Object.
+        </p>
+      </aside>
+    </main>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
